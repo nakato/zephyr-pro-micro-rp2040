@@ -1,0 +1,18 @@
+identifier: pro_micro_rp2040
+name: Sparkfun ProMicro RP2040 dev-17717
+type: mcu
+arch: arm
+flash: 8192
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+supported:
+  - uart
+  - gpio
+  - i2c
+  - spi
+  - hwinfo
+  - watchdog
+  - pwm
+  - usb_device

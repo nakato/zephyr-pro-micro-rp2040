@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2021 Yonatan Schachter
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+
+#include <freq.h>
+
+#include <rpi_pico/rp2040.dtsi>
+#include "pro_micro_rp2040-pinctrl.dtsi"
+#include "arduino_pro_micro_pins.dtsi"
+
+/ {
+	model = "pro_micro_rp2040_dev_17717";
+	compatible = "pro_micro_rp2040";
+
+	chosen {
+		zephyr,code-partition = &code_partition;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,console = &cdc_acm_uart;
+	};
+
+	xtal_clk: xtal-clk {
+		compatible = "fixed-clock";
+		clock-frequency = <12000000>;
+		#clock-cells = <0>;
+	};
+
+	aliases {
+		watchdog0 = &wdt0;
+	};
+};
+
+&flash0 {
+	reg = <0x10000000 DT_SIZE_M(16)>;
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Reserved memory for the second stage bootloader from hal_rpi_pico */
+		second_stage_bootloader: partition@0 {
+			label = "second_stage_bootloader";
+			reg = <0x00000000 0x100>;
+			read-only;
+		};
+
+		/* 16MB is a huge amount of space; in general user partiton tends to
+		 * be 128kb or so in size, but lets give it 2MB here */
+		code_partition: partition@100 {
+			label = "code-partition";
+			reg = <0x100 (DT_SIZE_M(14) - 0x100)>;
+			read-only;
+		};
+
+		// 2 MB starting at 14MB
+		storage_partition: partition@E00000 {
+			label = "storage";
+			reg = <DT_SIZE_M(14) DT_SIZE_M(16)>;
+		};
+	};
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&spi0 {
+	clock-frequency = <DT_FREQ_M(8)>;
+	status = "okay";
+	pinctrl-0 = <&spi0_default>;
+	pinctrl-names = "default";
+};
+
+&wdt0 {
+    status = "okay";
+};
+
+zephyr_udc0: &usbd {
+	status = "okay";
+	cdc_acm_uart: cdc_acm_uart {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_0";
+	};
+};
+
+&uart0 {
+	current-speed = <115200>;
+	status = "okay";
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-names = "default";
+};

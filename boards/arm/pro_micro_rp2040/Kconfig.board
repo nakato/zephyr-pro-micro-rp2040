@@ -1,0 +1,6 @@
+# Copyright (c) 2022 Sachi King
+# SPDX-License-Identifier: MIT
+
+config BOARD_PRO_MICRO_RP2040_DEV_17717
+	bool "pro_micro_rp2040_dev_17717"
+	depends on SOC_RP2040

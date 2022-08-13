@@ -1,0 +1,9 @@
+file_format: "1"
+id: pro_micro_rp2040_dev_17717
+name: Sparkfun ProMicro RP2040
+type: board
+arch: arm
+outputs:
+  - usb
+url: https://sparkfun.com/products/17717
+exposes: [pro_micro]
