@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <zephyr/dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+
 / {
 	pro_micro: connector {
 		compatible = "arduino-pro-micro";
@@ -52,7 +54,21 @@
 	};
 };
 
+&pinctrl {
+	i2c1_pro_micro: i2c1_pro_micro {
+		group1 {
+			pinmux = <I2C1_SDA_P2>, <I2C1_SCL_P3>;
+			input-enable;
+			input-schmitt-enable;
+		};
+	};
+};
+
 pro_micro_d: &pro_micro {};
-pro_micro_i2c: &i2c0 {};
+pro_micro_i2c: &i2c1 {
+	pinctrl-0 = <&i2c1_pro_micro>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+};
 pro_micro_spi: &spi0 {};
 pro_micro_serial: &uart0 {};
